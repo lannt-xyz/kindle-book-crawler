@@ -1,0 +1,15 @@
+networks:
+  shared_network:
+    external: true
+
+services:
+  kindle-book-crawer:
+    build:
+      context: .
+    container_name: kindle-book-crawer
+    restart: always
+    command: ["uvicorn", "dashboard:app", "--host", "0.0.0.0", "--port", "8000"]
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - shared_network
