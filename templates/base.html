@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Kindle Book Cralwer{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="icon" href="/static/favicon.ico">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/common.js"></script>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Loading Dialog -->
+    <div id="loading-dialog" class="fixed w-screen h-screen inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-[9999]">
+        <div class="bg-white text-black rounded-lg p-6 flex items-center space-x-4">
+            <div class="loader border-t-4 border-blue-500 rounded-full w-8 h-8 animate-spin"></div>
+            <span>Đang xử lý...</span>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-gray-900 shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0 text-xl font-bold text-purple-400">
+                    <a href="/" class="flex items-center space-x-2">
+                        Kindle Book Cralwer
+                    </a>
+                </div>
+                <!-- Navigation -->
+                <nav class="flex space-x-4">
+                    <a href="/" class="nav-link {% if request.url.path == '/' %}nav-link-active{% endif %}">Home</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="flex-1 max-w-7xl mx-auto px-4 py-6 w-full">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-500 text-center py-4">
+        © 2025 Kindle Book Cralwer. All rights reserved.
+    </footer>
+</body>
+</html>

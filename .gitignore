@@ -1,0 +1,9 @@
+.vscode
+venv
+*.log*
+__pycache__
+*.pyc
+*cache/
+
+.env
+test.py

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex flex-col gap-4">
+    <div class="flex gap-2">
+      <input
+        type="search"
+        id="url-input"
+        placeholder="Nhập URL của sách"
+        class="flex-1 p-2 border border-gray-300 rounded bg-gray-200 text-gray-900 font-medium"
+      />
+      <button id="btn-paste-go" class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Paste & Go</button>
+      <button id="btn-go" class="px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700">Go</button>
+    </div>
+    <pre id="result" class="p-3 border border-gray-400 rounded text-sm bg-gray-800 text-gray-100 font-semibold whitespace-pre-wrap"></pre>
+  </div>
+
+<script>
+    const input = document.getElementById('url-input');
+    const btnPasteGo = document.getElementById('btn-paste-go');
+    const btnGo = document.getElementById('btn-go');
+    const result = document.getElementById('result');
+
+    btnPasteGo.addEventListener('click', async () => {
+      try {
+        const text = await navigator.clipboard.readText();
+        input.value = text.trim();
+        triggerGo();
+      } catch (e) {
+        alert('Không đọc được clipboard: ' + e);
+      }
+    });
+  
+    btnGo.addEventListener('click', triggerGo);
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') triggerGo(); });
+  
+    async function triggerGo() {
+      const url = input.value.trim();
+      if (!url) {
+        result.textContent = 'Vui lòng nhập URL.';
+        return;
+      }
+      result.textContent = 'Đang gửi yêu cầu...';
+  
+      try {
+        const resp = await fetch('/api/craw', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+            // 'X-CSRF-Token': '...' nếu cần
+          },
+          body: JSON.stringify({ craw_url: url })
+        });
+  
+        if (!resp.ok) {
+          const text = await resp.text();
+          throw new Error(resp.status + ' ' + text);
+        }
+  
+        const data = await resp.json();
+        result.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        result.textContent = 'Lỗi: ' + err.message;
+      }
+    }
+  </script>
+{% endblock %}
